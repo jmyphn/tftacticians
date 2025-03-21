@@ -2,6 +2,8 @@ import numpy as np
 import re
 import os
 
+os.environ["ROOT_PATH"] = os.path.abspath(os.path.join("..", os.curdir))
+
 champions = ["Ahri", "Annie", "Ashe", "AurelionSol", "Blitzcrank", "Caitlyn",
              "ChoGath", "Darius", "Ekko", "Ezreal", "Fiora", "Fizz", "Gangplank",
              "Graves", "Irelia", "JarvanIV", "Jayce", "Jhin", "Jinx", "KaiSa",
@@ -70,7 +72,7 @@ def recommend_next_champion(user_comp_csv, comatrix_normalized, champions, champ
     # Return the champion name
     return champions[recommended_idx]
 
-def recommend_k_next_champions(user_comp_csv, champions, k=1):
+def recommend_k_next_champions(user_comp_csv, k=1):
     """
     Given a comma-separated list of champion names, returns the top-k champions
     with the highest row-normalized co-occurrence sum that are not already

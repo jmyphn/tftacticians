@@ -5,7 +5,6 @@ from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import numpy as np
 
-from helpers.utils import load_comatrices
 from helpers.utils import (champions_lower_dict, tokenize, recommend_k_next_champions)
 
 k = 5 # Number of champions to recommend
@@ -51,20 +50,16 @@ trait_info {
 # Sample search, the LIKE operator in this case is hard-coded,
 # but if you decide to use SQLAlchemy ORM framework,
 # there's a much better and cleaner way to do this
-def sql_search(name):
-    query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE '%%{name.lower()}%%' limit 1"""
-    keys = ["name", "cost", "traits"]
-    data = mysql_engine.query_selector(query_sql)[0]
-
-    # find the description of the traits
-    traits_desc = []
-    for trait in data[2].split(","):
-        trait_query = f"""SELECT description FROM trait_info WHERE LOWER( name ) LIKE '%%{trait.lower()}%%' limit 1"""
-        trait_desc = mysql_engine.query_selector(trait_query)
-        if trait_desc:
-            traits_desc.append(trait_desc.fetchone()[0])
-    
-    return json.dumps(dict(zip(keys, i)) for i in data) + json.dumps({"traits_desc": traits_desc})
+def sql_search_champions(champions):
+    champion_info = []
+    for champion in champions:
+        query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE '%%{champion.lower()}%%' limit 1"""
+        result = mysql_engine.query_selector(query_sql)
+        keys = ["name", "cost", "traits"]
+        champion_info = champion_info + [dict(zip(keys, row)) for row in result]
+        # TODO: traits
+    res = json.dumps(champion_info)
+    return res
 
 
 @app.route("/")
@@ -92,16 +87,8 @@ def champions_search():
     # get the recommended units for the user's comp
     recommended_champions = recommend_k_next_champions(champions_csv, k)
 
-    # get the champion info for each recommended champion
-    recommended_champions_info = []
-    for champion in recommended_champions:
-        champion_info = sql_search(champion)
-        if champion_info:
-            recommended_champions_info.append(json.loads(champion_info)[0])
-    # return the recommended champions and the user's comp
-    return json.dumps({
-        "recommended_champions_names" : recommended_champions,
-    })
+    # return recommended champions
+    return sql_search_champions(recommended_champions)
 
 
 if "DB_NAME" not in os.environ:
