@@ -64,10 +64,34 @@
     margin-top:50px; 
 }
 
-.episode-title{
+.answer-name{
+    font-family: 'Kanit', sans-serif;
+    font-size: 30px;
+}
+
+.answer-traits{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+
+/* .episode-title{
     font-family: 'Kanit', sans-serif;
 }
 
 .episode-desc{
     font-family: 'Montserrat', sans-serif;
+} */
+
+.trait{
+    font-family:Montserrat, sans-serif;
 }
+
+.trait-desc{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+

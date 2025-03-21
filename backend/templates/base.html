@@ -23,10 +23,23 @@
     <script>
 
         function answerBoxTemplate(name,traits){
-            return `<div class=''>
-                <h3 class='episode-title'>${name}</h3>
-                <p class='episode-desc'>${traits}</p>
-            </div>`
+            // name: name of the champion
+            // traits: list of trait name to trait description
+            // e.g. "Sorcerer: +20% spell power"
+
+            let traitsHTML = ""
+            for (let i = 0; i < traits.length; i++){
+                traitsHTML += `<div class="trait">${traits[i].name}</div>`
+                traitsHTML += `<div class="trait-desc">${traits[i].description}</div>`
+            }
+            return `
+                <h3>
+                    <div class="answer-name">${name}</div>
+                    <div class="answer-traits">
+                        ${traitsHTML}
+                    </div>
+                </h3>
+            ` 
         }
 
         function sendFocus(){

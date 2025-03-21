@@ -57,8 +57,30 @@ def sql_search_champions(champions):
         result = mysql_engine.query_selector(query_sql)
         keys = ["name", "cost", "traits"]
         champion_info = champion_info + [dict(zip(keys, row)) for row in result]
-        # TODO: traits
+    
+    # trait info
+    keys = ["name", "description"]
+    for champion in champion_info:
+        # Split the traits string into a list
+        traits = champion["traits"].split(",")
+        # Remove any leading/trailing whitespace from each trait
+        traits = [trait.strip() for trait in traits]
+        champion["traits"] = []
+        for trait in traits:
+            print(trait)
+            query_sql = f"""SELECT * FROM trait_info WHERE LOWER( name ) LIKE '%%{trait.lower()}%%' limit 1"""
+            result = mysql_engine.query_selector(query_sql)
+            
+            trait_info = [dict(zip(keys, row)) for row in result]
+            if len(trait_info) > 0:
+                champion["traits"].append(trait_info[0])
+            else:
+                champion["traits"].append({"name": trait, "description": "No description found."})
+    print(champion_info)
+    # Convert the champion_info list to JSON
+    # and return it as a response
     res = json.dumps(champion_info)
+    print(res)
     return res
 
 
