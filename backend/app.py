@@ -17,7 +17,7 @@ os.environ["ROOT_PATH"] = os.path.abspath(os.path.join("..", os.curdir))
 # Don't worry about the deployment credentials, those are fixed
 # You can use a different DB name if you want to
 LOCAL_MYSQL_USER = "root"
-LOCAL_MYSQL_USER_PASSWORD = "admin"
+LOCAL_MYSQL_USER_PASSWORD = "hiimjimmy6782"
 LOCAL_MYSQL_PORT = 3306
 LOCAL_MYSQL_DATABASE = "tftacticians"
 

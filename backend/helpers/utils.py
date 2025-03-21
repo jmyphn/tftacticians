@@ -2,7 +2,7 @@ import numpy as np
 import re
 import os
 
-os.environ["ROOT_PATH"] = os.path.abspath(os.path.join("..", os.curdir))
+os.environ["ROOT_PATH"] = os.path.abspath(os.path.join(".", os.curdir))
 
 champions = ["Ahri", "Annie", "Ashe", "AurelionSol", "Blitzcrank", "Caitlyn",
              "ChoGath", "Darius", "Ekko", "Ezreal", "Fiora", "Fizz", "Gangplank",
@@ -16,8 +16,8 @@ champions = ["Ahri", "Annie", "Ashe", "AurelionSol", "Blitzcrank", "Caitlyn",
 # Create a mapping of champion names to their indices for easy access
 champions_lower_dict = {champions[i].lower(): i for i in range(len(champions))}  
 
-comatrix_normalized = np.load(os.path.join(os.environ['ROOT_PATH'], 'backend', 'comatrix_normalized.npy'))
-comatrix = np.load(os.path.join(os.environ['ROOT_PATH'], 'backend', 'comatrix.npy'))
+comatrix_normalized = np.load(os.path.join(os.environ['ROOT_PATH'], 'data', 'comatrix_normalized.npy'))
+comatrix = np.load(os.path.join(os.environ['ROOT_PATH'], 'data', 'comatrix.npy'))
 
 # Tokenize method which can be passed into various methods.
 def tokenize(text):
