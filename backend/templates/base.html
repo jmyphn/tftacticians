@@ -1,27 +1,51 @@
 <!doctype html>
-<title>{% block title %}TFTacticians{% endblock %} - Flaskr</title>
+<title>{% block title %}{% endblock %} - TFTacticians</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
+
 <body>
+    <div class="top-glow"></div>
     <div class="full-body-container">
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="title">TFTacticians</h1>
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="600" height="120">
+                    <defs>
+                        <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="0">
+                            <stop offset="0%" style="stop-color:#C89B3C;" />
+                            <stop offset="50%" style="stop-color:#F0E6D2;" />
+                            <stop offset="100%" style="stop-color:#C89B3C;" />
+                        </linearGradient>
+
+                        <pattern id="pattern" x="0" y="0" width="300%" height="100%" patternUnits="userSpaceOnUse">
+                            <rect x="0" y="0" width="150%" height="100%" fill="url(#gold-gradient)">
+                                <animate attributeType="XML" attributeName="x" from="0" to="150%" dur="7s"
+                                    repeatCount="indefinite" />
+                            </rect>
+                            <rect x="-150%" y="0" width="150%" height="100%" fill="url(#gold-gradient)">
+                                <animate attributeType="XML" attributeName="x" from="-150%" to="0" dur="7s"
+                                    repeatCount="indefinite" />
+                            </rect>
+                        </pattern>
+                    </defs>
+                    <text x="50%" y="65%" text-anchor="middle" fill="url(#pattern)" stroke="#785A28" stroke-width="2"
+                        font-family="'Futura', 'Arial Black', sans-serif" font-weight="bold"
+                        font-size="75px">TFTacticians</text>
+                </svg>
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Name the units you currently have, and we'll recommend what units to target!" id="filter-text-val" onkeyup="filterText()">
+                <input id="filter-text-val" onkeyup="filterText()">
+                <span class="placeholder-text">Enter a <span class="typewriter-text"></span></span>
             </div>
         </div>
         <div id="answer-box">
-
         </div>
     </div>
 
     <script>
-
         function answerBoxTemplate(name,traits){
             // name: name of the champion
             // traits: list of trait name to trait description
@@ -39,23 +63,63 @@
                         ${traitsHTML}
                     </div>
                 </h3>
-            ` 
+            `
         }
 
-        function sendFocus(){
+        function sendFocus() {
             document.getElementById('filter-text-val').focus()
         }
 
-        function filterText(){
+        function filterText() {
             document.getElementById("answer-box").innerHTML = ""
             console.log(document.getElementById("filter-text-val").value)
             fetch("/champions?" + new URLSearchParams({ query: document.getElementById("filter-text-val").value }).toString())
-            .then((response) => response.json())
-            .then((data) => data.forEach(row => {
-                let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row.name,row.traits)
-                document.getElementById("answer-box").appendChild(tempDiv)
-            }));
+                .then((response) => response.json())
+                .then((data) => data.forEach(row => {
+                    let tempDiv = document.createElement("div")
+                    tempDiv.innerHTML = answerBoxTemplate(row.name, row.traits)
+                    document.getElementById("answer-box").appendChild(tempDiv)
+                }));
+
+            const input = document.getElementById('filter-text-val');
+            const placeholder = document.querySelector('.placeholder-text');
+            placeholder.style.display = input.value ? 'none' : 'inline-block';
         }
+
+        const typewriterElement = document.querySelector('.typewriter-text');
+        const words = ['champion', 'class', 'playstyle'];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let isEnd = false;
+
+        function typeEffect() {
+            const currentWord = words[wordIndex];
+            const currentChar = currentWord.substring(0, charIndex);
+            typewriterElement.textContent = currentChar;
+            typewriterElement.classList.remove('blinking');
+
+            if (!isDeleting && charIndex < currentWord.length) {
+                charIndex++;
+                setTimeout(typeEffect, 100);
+            } else if (isDeleting && charIndex > 0) {
+                charIndex--;
+                setTimeout(typeEffect, 50);
+            } else {
+                isDeleting = !isDeleting;
+                typewriterElement.classList.add('blinking');
+                if (!isDeleting) {
+                    wordIndex = (wordIndex + 1) % words.length;
+                }
+                setTimeout(typeEffect, isDeleting ? 1000 : 500);
+            }
+        }
+
+        document.getElementById('filter-text-val').addEventListener('input', function () {
+            const placeholder = document.querySelector('.placeholder-text');
+            placeholder.style.display = this.value ? 'none' : 'inline-block';
+        });
+
+        window.addEventListener('load', typeEffect);
     </script>
 </body>

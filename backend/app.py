@@ -46,7 +46,6 @@ trait_info {
 }
 """
 
-
 # Sample search, the LIKE operator in this case is hard-coded,
 # but if you decide to use SQLAlchemy ORM framework,
 # there's a much better and cleaner way to do this
@@ -115,4 +114,3 @@ def champions_search():
 
 if "DB_NAME" not in os.environ:
     app.run(debug=True, host="0.0.0.0", port=5000)
-
