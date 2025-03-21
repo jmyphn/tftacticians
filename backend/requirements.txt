@@ -20,5 +20,4 @@ SQLAlchemy==1.4.46
 typing_extensions==4.5.0
 Werkzeug==2.2.2
 numpy==1.23.5
-re==2.2.1
 pandas==1.5.2
