@@ -192,12 +192,14 @@ body {
 .answer-name{
     font-family: 'Kanit', sans-serif;
     font-size: 30px;
+    color: #F0E6D2;
 }
 
 .answer-traits{
     font-family: 'Open Sans', sans-serif;
     font-size: 20px;
     margin-top: 10px;
+    color: #A09B8C;
 }
 
 .trait{
