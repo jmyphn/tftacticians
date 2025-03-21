@@ -45,7 +45,7 @@ body {
     height: 120px;
 }
 
-#title{
+#title {
     font-family: 'Kanit', sans-serif;
     font-size: 60px;
     margin-top: 20px;
@@ -189,26 +189,49 @@ body {
     border-color: rgba(200, 155, 60, 0.5);
 }
 
-.answer-name{
+.answer-name {
     font-family: 'Kanit', sans-serif;
     font-size: 30px;
     color: #F0E6D2;
 }
 
-.answer-traits{
+.answer-traits {
     font-family: 'Open Sans', sans-serif;
     font-size: 20px;
     margin-top: 10px;
     color: #A09B8C;
 }
 
-.trait{
-    font-family:Montserrat, sans-serif;
+.trait {
+    font-family: Montserrat, sans-serif;
 }
 
-.trait-desc{
+.trait-desc {
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     margin-top: 5px;
     margin-bottom: 10px;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0;
+    margin: 0px 0 0 0;
+}
+
+.pengu-container {
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    transform: translateY(-15px);
+}
+
+.pengu-image {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    margin-left: -130px;
 }
