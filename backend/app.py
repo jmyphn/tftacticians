@@ -4,8 +4,11 @@ from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import numpy as np
-
+from dotenv import load_dotenv
 from helpers.utils import (champions_lower_dict, tokenize, recommend_k_next_champions)
+
+# load env variables from .env file
+load_dotenv()
 
 k = 5 # Number of champions to recommend
 
@@ -17,7 +20,7 @@ os.environ["ROOT_PATH"] = os.path.abspath(os.path.join("..", os.curdir))
 # Don't worry about the deployment credentials, those are fixed
 # You can use a different DB name if you want to
 LOCAL_MYSQL_USER = "root"
-LOCAL_MYSQL_USER_PASSWORD = "admin"
+LOCAL_MYSQL_USER_PASSWORD = os.getenv("DB_PASSWORD") | "admin"
 LOCAL_MYSQL_PORT = 3306
 LOCAL_MYSQL_DATABASE = "tftacticians"
 

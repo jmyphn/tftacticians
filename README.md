@@ -44,6 +44,12 @@ Currently, the app only supports recommendations with Set 3 champions as input.
 
 You will need to have `python` version 3.10 or above. You will also need to have MySQL set up locally (specifically, you need [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)) to execute the commands in the `init.sql` file locally. Optionally, you can use [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) as an alternative to the command-line interface.
 
+### Setting up environment variables
+In the root directory, create a `.env` file. Inside, include the following:
+```
+DB_PASSWORD = <your local mysql server password here>
+```
+
 ### Setting up the virtual environment
 You can setup the virtual environment from the command line. Navigate to the root directory of this project and run the following command:
 ```bash
