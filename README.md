@@ -4,7 +4,7 @@ Recommending team compositions (...for Set 3)!
 ```
 .
 ├── README.md
-├── SETUP.md
+├── SERVER_SETUP.md
 ├── __init__.py
 ├── backend
 │   ├── app.py
