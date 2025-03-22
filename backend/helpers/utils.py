@@ -79,9 +79,6 @@ def recommend_k_next_champions(user_comp_csv, k=1):
     in the user's comp.
 
     :param user_comp_csv: str, e.g. "Ahri, Annie, Ashe"
-    :param comatrix_normalized: np.array (N x N), row-normalized co-occurrence matrix
-    :param champions: list of str, e.g. ["Ahri", "Annie", "Ashe", ...]
-    :param champions_lower_dict: dict, e.g. {"ahri": 0, "annie": 1, "ashe": 2, ...}
     :param k: int, number of champions to return
 
     :return: list of str (length <= k), champion names in priority order
