@@ -5,7 +5,8 @@ from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import numpy as np
 from dotenv import load_dotenv
-from helpers.utils import (champions_lower_dict, tokenize, recommend_k_next_champions)
+from helpers.utils import (champions_lower_dict, tokenize, recommend_champions, combined_champions)
+from helpers.svd import SVDSearcher
 
 # load env variables from .env file
 load_dotenv()
@@ -20,7 +21,7 @@ os.environ["ROOT_PATH"] = os.path.abspath(os.path.join("..", os.curdir))
 # Don't worry about the deployment credentials, those are fixed
 # You can use a different DB name if you want to
 LOCAL_MYSQL_USER = "root"
-LOCAL_MYSQL_USER_PASSWORD = os.getenv("DB_PASSWORD") | "admin"
+LOCAL_MYSQL_USER_PASSWORD = os.getenv("DB_PASSWORD") if (os.getenv("DB_PASSWORD") != None or os.getenv("DB_PASSWORD") != "") else "admin"
 LOCAL_MYSQL_PORT = 3306
 LOCAL_MYSQL_DATABASE = "tftacticians"
 
@@ -48,6 +49,8 @@ trait_info {
     description VARCHAR(256)
 }
 """
+champion_descriptions = combined_champions
+svd_searcher = SVDSearcher(champion_descriptions)
 
 # Sample search, the LIKE operator in this case is hard-coded,
 # but if you decide to use SQLAlchemy ORM framework,
@@ -57,7 +60,7 @@ def sql_search_champions(champions):
     for champion in champions:
         query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE '%%{champion.lower()}%%' limit 1"""
         result = mysql_engine.query_selector(query_sql)
-        keys = ["name", "cost", "traits"]
+        keys = ["name", "traits"]
         champion_info = champion_info + [dict(zip(keys, row)) for row in result]
     
     # trait info
@@ -93,8 +96,12 @@ def home():
 
 @app.route("/champions")
 def champions_search():
-    text = request.args.get("query")
-    tokenized_text = tokenize(text)
+    query = request.args.get("query", '')
+    svd_results_all_champions = svd_searcher.search(query)
+    svd_results_all_champions = np.array(svd_results_all_champions).flatten()
+
+    tokenized_text = tokenize(query)
+    
 
     # now we find the champions in the text that the user queried.
     # TODO: we can probably use text similarity to find the closest match
@@ -103,16 +110,22 @@ def champions_search():
     for token in tokenized_text:
         if token in champions_lower_dict:
             champions_to_find.append(token.lower())
-    if len(champions_to_find) == 0:
-        return json.dumps([])
     
     champions_csv = ",".join(champions_to_find)
 
     # get the recommended units for the user's comp
-    recommended_champions = recommend_k_next_champions(champions_csv, k)
+    recommended_champions = recommend_champions(champions_csv)
+
+    # linear combination between the svd results and the recommended champions
+    find_champions = 0.5*svd_results_all_champions + 0.5*recommended_champions
+    find_champions = np.argsort(find_champions)[::-1][:k]
+    find_champions = [combined_champions[i] for i in find_champions]
+    find_champions = [x.split(":")[0].strip() for x in find_champions]
+    print(find_champions)
+    # get the champions from the database
 
     # return recommended champions
-    return sql_search_champions(recommended_champions)
+    return sql_search_champions(find_champions)
 
 
 if "DB_NAME" not in os.environ:

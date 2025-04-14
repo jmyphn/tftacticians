@@ -1,88 +1,100 @@
 DROP TABLE IF EXISTS champ_info;
-DROP TABLE IF EXISTS trait_info;
 CREATE TABLE IF NOT EXISTS champ_info (
-    name VARCHAR(64) PRIMARY KEY,
-    cost INT,
-    traits VARCHAR(255)
+    name VARCHAR(256) PRIMARY KEY,
+    traits TEXT
 );
+
+DROP TABLE IF EXISTS trait_info;
 CREATE TABLE IF NOT EXISTS trait_info (
-    name VARCHAR(64) PRIMARY KEY,
-    description VARCHAR(512)
+    name VARCHAR(256) PRIMARY KEY,
+    description TEXT
 );
 
-INSERT INTO champ_info (name, cost, traits) VALUES ("Ahri", 2, "Star Guardian,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Annie", 2, "Mech-Pilot,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Ashe", 3, "Celestial,Sniper");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Aurelion Sol", 5, "Rebel,Starship");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Blitzcrank", 2, "Chrono,Brawler");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Caitlyn", 1, "Chrono,Sniper");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Cho'Gath", 4, "Void,Brawler");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Darius", 2, "Space Pirate,Mana-Reaver");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Ekko", 5, "Cybernetic,Infiltrato");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Ezreal", 3, "Chrono,Blaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Fiora", 1, "Cybernetic,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Fizz", 4, "Mech-Pilot,Infiltrator");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Gangplank", 5, "Space Pirate,Mercenary,Demolitionist");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Graves", 1, "Space Pirate,Blaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Irelia", 4, "Cybernetic,Mana-Reaver,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Jarvan IV", 1, "Dark Star,Protector");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Jayce", 3, "Space Pirate,Vanguard");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Jhin", 4, "Dark Star,Sniper");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Jinx", 4, "Rebel,Blaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Kai'Sa", 2, "Valkyrie,Infiltrator");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Karma", 3, "Dark Star,Mystic");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Kassadin", 3, "Celestial,Mana-Reaver");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Kayle", 4, "Valkyrie,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Kha'Zix", 1, "Void,Infiltrator");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Leona", 1, "Cybernetic,Vanguard");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Lucian", 2, "Cybernetic,Blaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Lulu", 5, "Celestial,Mystic");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Lux", 3, "Dark Star,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Malphite", 1, "Rebel,Brawler");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Master Yi", 3, "Rebel,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Miss Fortune", 5, "Valkyrie,Mercenary,Blaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Mordekaiser", 2, "Dark Star,Vanguard");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Neeko", 3, "Star Guardian,Protector");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Poppy", 1, "Star Guardian,Vanguard");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Rakan", 2, "Celestial,Protector");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Rumble", 3, "Mech-Pilot,Demolitionist");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Shaco", 3, "Dark Star,Infiltrator");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Shen", 2, "Chrono,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Sona", 2, "Rebel,Mystic");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Soraka", 4, "Star Guardian,Mystic");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Syndra", 3, "Star Guardian,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Thresh", 5, "Chrono,Mana-Reaver");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Twisted Fate", 1, "Chrono,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Vel'Koz", 4, "Void,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Vi", 3, "Cybernetic,Brawler");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Wukong", 4, "Chrono,Vanguard");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Xayah", 1, "Celestial,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Xerath", 5, "Dark Star,Sorcerer");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Xin Zhao", 2, "Celestial,Protector");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Yasuo", 2, "Rebel,Blademaster");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Ziggs", 1, "Rebel,Demolitionist");
-INSERT INTO champ_info (name, cost, traits) VALUES ("Zoe", 1, "Star Guardian,Sorcerer");
+INSERT INTO champ_info (name, traits) VALUES
+('Alistar', 'Golden Ox,Bruiser'),
+('Annie', 'Golden Ox,A.M.P.'),
+('Aphelios', 'Golden Ox,Marksman'),
+('Aurora', 'Anima Squad,Dynamo'),
+('Brand', 'Street Demon,Techie'),
+('Braum', 'Syndicate,Vanguard'),
+("Cho'Gath", 'BoomBots,Bruiser'),
+('Darius', 'Syndicate,Bruiser'),
+('Dr.Mundo', 'Street Demon,Bruiser,Slayer'),
+('Draven', 'Cypher,Rapidfire'),
+('Ekko', 'Street Demon,Strategist'),
+('Elise', 'Nitro,Dynamo'),
+('Fiddlesticks', 'BoomBots,Techie'),
+('Galio', 'Cypher,Bastion'),
+('Garen', 'God of the Net'),
+('Gragas', 'Divinicorp,Bruiser'),
+('Graves', 'Golden Ox,Executioner'),
+('Illaoi', 'Anima Squad,Bastion'),
+('Jarvan IV', 'Golden Ox,Vanguard,Slayer'),
+('Jax', 'Exotech,Bastion'),
+('Jhin', 'Exotech,Marksman,Dynamo'),
+('Jinx', 'Street Demon,Marksman'),
+('Kindred', 'Nitro,Rapidfire,Marksman'),
+('Kobuko', 'Cyberboss,Bruiser'),
+('KogMaw', 'BoomBots,Rapidfire'),
+('LeBlanc', 'Cypher,Strategist'),
+('Leona', 'Anima Squad,Vanguard'),
+('Miss Fortune', 'Syndicate,Dynamo'),
+('Mordekaiser', 'Exotech,Bruiser,Techie'),
+('Morgana', 'Divinicorp,Dynamo'),
+('Naafiri', 'Exotech,A.M.P.'),
+('Neeko', 'Street Demon,Strategist'),
+('Nidalee', 'Nitro,A.M.P.'),
+('Poppy', 'Cyberboss,Bastion'),
+('Renekton', 'Overlord,Divinicorp,Bastion'),
+('Rengar', 'Street Demon,Executioner'),
+('Rhaast', 'Divinicorp,Vanguard'),
+('Samira', 'Street Demon,A.M.P.'),
+('Sejuani', 'Exotech,Bastion'),
+('Senna', 'Divinicorp,Slayer'),
+('Seraphine', 'Anima Squad,Techie'),
+('Shaco', 'Syndicate,Slayer'),
+('Shyvana', 'Nitro,Bastion,Techie'),
+('Skarner', 'BoomBots,Vanguard'),
+('Sylas', 'Anima Squad,Vanguard'),
+('Twisted Fate', 'Syndicate,Rapidfire'),
+('Urgot', 'BoomBots,Executioner'),
+('Varus', 'Exotech,Executioner'),
+('Vayne', 'Anima Squad,Slayer'),
+('Veigar', 'Cyberboss,Techie'),
+('Vex', 'Divinicorp,Executioner'),
+('Vi', 'Cypher,Vanguard'),
+('Viego', 'Soul Killer,Golden Ox,Techie'),
+('Xayah', 'Anima Squad,Marksman'),
+('Yuumi', 'Anima Squad,A.M.P.,Strategist'),
+('Zac', 'Virus'),
+('Zed', 'Cypher,Slayer'),
+('Zeri', 'Exotech,Rapidfire'),
+('Ziggs', 'Cyberboss,Strategist'),
+('Zyra', 'Street Demon,Techie');
 
-INSERT INTO trait_info (name, description) VALUES ("Blademaster", "Blademasters' Basic Attacks have a chance to trigger two additional attacks against their target. These additional attacks deal damage like Basic Attacks and trigger on-hit effects.");
-INSERT INTO trait_info (name, description) VALUES ("Blaster", "Every fourth Basic Attack from a Blaster fires additional attacks at random enemies. These additional attacks deal damage like Basic Attacks, trigger on-hit effects, and can critically hit.");
-INSERT INTO trait_info (name, description) VALUES ("Brawler", "Brawlers gain bonus Maximum Health.");
-INSERT INTO trait_info (name, description) VALUES ("Celestial", "All allies heal for some of the damage they deal with spells and attacks.");
-INSERT INTO trait_info (name, description) VALUES ("Chrono", "All allies gain attack speed every few seconds.");
-INSERT INTO trait_info (name, description) VALUES ("Cybernetic", "Cybernetic champions with at least one item gain Health and Attack Damage.");
-INSERT INTO trait_info (name, description) VALUES ("Dark Star", "When a Dark Star champion dies they give increased damage, plus any previous stacks of this effect, to the nearest ally Dark Star champion.");
-INSERT INTO trait_info (name, description) VALUES ("Demolitionist", "Damage from Demolitionists' spellcasts stuns their targets for a few seconds. (Once per spellcast)");
-INSERT INTO trait_info (name, description) VALUES ("Infiltrator", "Infiltrators gain Attack Speed for a few seconds at the start of combat.");
-INSERT INTO trait_info (name, description) VALUES ("Mana-Reaver", "Mana-Reavers' Basic Attacks increase the mana cost of their target's next spellcast by a percentage.");
-INSERT INTO trait_info (name, description) VALUES ("Mech-Pilot", "At the start of combat, three random Mech-Pilots are teleported into a Super-Mech. The Super-Mech has the combined Health, Attack Damage, and Traits of its pilots, as well as 3 random items from among them. When the Super-Mech dies the Pilots are ejected, granted Mana, and continue to fight.");
-INSERT INTO trait_info (name, description) VALUES ("Mercenary", "Upgrades for Mercenaries' spells have a chance to appear in the shop.");
-INSERT INTO trait_info (name, description) VALUES ("Mystic", "All allies gain Magic Resistance.");
-INSERT INTO trait_info (name, description) VALUES ("Protector", "Protectors shield themselves for a few seconds whenever they cast a spell. This shield doesn't stack.");
-INSERT INTO trait_info (name, description) VALUES ("Rebel", "At the start of combat, Rebels gain a shield and bonus damage for each adjacent Rebel. The shield lasts for a few seconds.");
-INSERT INTO trait_info (name, description) VALUES ("Sniper", "Snipers deal percentage increased damage for each hex between themselves and their target.");
-INSERT INTO trait_info (name, description) VALUES ("Sorcerer", "All allies have increased Spell Power.");
-INSERT INTO trait_info (name, description) VALUES ("Space Pirate", "Whenever a Space Pirate lands a killing blow on a Champion there is a chance to drop extra loot.");
-INSERT INTO trait_info (name, description) VALUES ("Star Guardian", "Star Guardians' spellcasts grant Mana to other Star Guardians, spread among them.");
-INSERT INTO trait_info (name, description) VALUES ("Starship", "Starships gain mana per second, maneuver around the board, and are immune to movement impairing effects, but can't make Basic Attacks.");
-INSERT INTO trait_info (name, description) VALUES ("Valkyrie", "Valkyrie attacks and spells always critically hit targets below a percentage health.");
-INSERT INTO trait_info (name, description) VALUES ("Vanguard", "Vanguard champions gain bonus Armor.");
-INSERT INTO trait_info (name, description) VALUES ("Void", "Attacks and spells from Void champions deal true damage.");
+INSERT INTO trait_info (name, description) VALUES
+('Anima Squad','At each tier, a random Anima Squad champion fires an extra weapon periodically. Anima Squad champions also gain bonus Armor, Magic Resist, and Damage Amp.'),
+('BoomBots','BoomBots champions fire a magic damage missile at an enemy after every 400 damage they deal, and 8 PERCENT of damage they take is added to this missiles damage.'),
+('Cyberboss','The strongest Cyberboss champion transforms into its final form, gaining bonus Health and Ability Power, and its ability hits additional enemies.'),
+('Cypher','Cypher champions accumulate Intel by losing rounds (and a bit from kills). They can trade Intel for loot one time, after which Cypher champions gain bonus Attack Damage and Ability Power.'),
+('Divinicorp','Each Divinicorp champion grants a unique stat to your team (and double to themselves), which increases with more Divinicorp champions on the field.'),
+('Exotech','Exotech champions can equip special Exotech-only items and gain bonus Health and Attack Speed for each such item equipped.'),
+('God of the Net','After 2 combats, opens an Armory of Trait Mods to give a champion the benefit of a trait (without contributing). Each mod taken increases the rounds needed for the next; champions can only have one mod.'),
+('Golden Ox','Golden Ox champions gain Damage Amp and can drop gold on kills. Spending gold on rerolls or XP permanently increases their Damage Amp (if they fought last round).'),
+('Nitro','Nitro champions generate Chrome each round based on their star level, fueling a robot ally. At 200 Chrome, the robot ally upgrades into a more powerful form.'),
+('Overlord','The Overlord champion bites the unit behind him, dealing 40 PERCENT of their max Health as true damage and absorbing 40 PERCENT of their Health and 33 PERCENT of their Attack Damage.'),
+('Soul Killer','The Soul Killer champion creates a hologram of the highest-cost enemy he helped kill last round. The hologram has very high Health and deals significant damage (scaling with the champions star level).'),
+('Street Demon','Allies in painted hexes gain bonus Health, Ability Power, and Attack Damage (50 PERCENT more on signature hexes). Street Demon champions double all these bonuses.'),
+('Syndicate','Grants a Kingpin hat that upgrades a chosen Syndicate champions ability. Syndicate champions also gain bonus Health and Damage Amp.'),
+('Virus','The Virus champion infects the shop with a 10 PERCENT chance to spawn a bloblet. Buying the bloblet permanently increases that champions Health and Ability Power.'),
+('A.M.P.','A.M.P. champions get unique ability upgrades (gain Amp) and also gain bonus Health.'),
+('Bastion','All allies gain Armor and Magic Resist; Bastion champions gain more, and double their bonus for the first 10 seconds of combat.'),
+('Bruiser','All allies gain bonus Health; Bruiser champions gain an additional percentage increase to their max Health.'),
+('Dynamo','Every 3 seconds your team gains Mana; Dynamo champions gain twice as much Mana.'),
+('Executioner','Executioner abilities can critically strike, and Executioners gain increased Critical Chance and Critical Damage. If a target is below 30 PERCENT Health, Executioners deal double bonus critical damage.'),
+('Marksman','Marksman champions gain bonus Attack Damage, which doubles after 8 seconds of combat.'),
+('Rapidfire','Your team gains bonus Attack Speed; Rapidfire champions gain stacking Attack Speed on each attack.'),
+('Slayer','Slayer champions gain bonus Attack Damage and Omnivamp. Excess healing from their Omnivamp is redirected to heal the allied Slayer with the lowest health.'),
+('Strategist','At combat start, back-row allies gain bonus damage and front-row allies gain damage reduction. Strategist champions gain triple these bonuses.'),
+('Techie','Techie champions gain bonus Ability Power, and enemies hit by their abilities deal reduced damage for a short duration.'),
+('Vanguard','Vanguard champions gain 10 PERCENT increased durability (damage reduction) while shielded, and they gain a shield at the start of combat and upon reaching 50 PERCENT Health.');
