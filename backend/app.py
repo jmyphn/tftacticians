@@ -58,7 +58,7 @@ svd_searcher = SVDSearcher(champion_descriptions)
 def sql_search_champions(champions):
     champion_info = []
     for champion in champions:
-        query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE '%%{champion.lower()}%%' limit 1"""
+        query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE "%%{champion.lower()}%%" limit 1"""
         result = mysql_engine.query_selector(query_sql)
         keys = ["name", "traits"]
         champion_info = champion_info + [dict(zip(keys, row)) for row in result]
@@ -72,7 +72,6 @@ def sql_search_champions(champions):
         traits = [trait.strip() for trait in traits]
         champion["traits"] = []
         for trait in traits:
-            print(trait)
             query_sql = f"""SELECT * FROM trait_info WHERE LOWER( name ) LIKE '%%{trait.lower()}%%' limit 1"""
             result = mysql_engine.query_selector(query_sql)
             
@@ -85,7 +84,7 @@ def sql_search_champions(champions):
     # Convert the champion_info list to JSON
     # and return it as a response
     res = json.dumps(champion_info)
-    print(res)
+    # print(res)
     return res
 
 
@@ -97,6 +96,7 @@ def home():
 @app.route("/champions")
 def champions_search():
     query = request.args.get("query", '')
+    # TODO: cho'gath not being tokenized properly, need to fix
     svd_results_all_champions = svd_searcher.search(query)
     svd_results_all_champions = np.array(svd_results_all_champions).flatten()
 
@@ -108,7 +108,9 @@ def champions_search():
     # to the champions in the database (using edit distance metrics)
     champions_to_find = []
     for token in tokenized_text:
-        if token in champions_lower_dict:
+        print(token)
+        if token.lower() in champions_lower_dict:
+            print(f"Found champion: {token.lower()}")
             champions_to_find.append(token.lower())
     
     champions_csv = ",".join(champions_to_find)
@@ -117,11 +119,14 @@ def champions_search():
     recommended_champions = recommend_champions(champions_csv)
 
     # linear combination between the svd results and the recommended champions
+    # print(svd_results_all_champions)
+    # print("-"*20)
+    # print(recommended_champions)
     find_champions = 0.5*svd_results_all_champions + 0.5*recommended_champions
     find_champions = np.argsort(find_champions)[::-1][:k]
     find_champions = [combined_champions[i] for i in find_champions]
     find_champions = [x.split(":")[0].strip() for x in find_champions]
-    print(find_champions)
+    # print(find_champions)
     # get the champions from the database
 
     # return recommended champions
