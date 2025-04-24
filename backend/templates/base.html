@@ -42,8 +42,20 @@
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input id="filter-text-val" onkeyup="filterText()">
+                <input id="filter-text-val">
                 <span class="placeholder-text">Enter a <span class="typewriter-text"></span></span>
+                <button id="search-button" class="search-button">
+                    <span>Search</span>
+                </button>
+            </div>
+            <!-- Loading ring container positioned below the search bar -->
+            <div id="loading-container" class="loading-container">
+                <div class="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
         </div>
         <div id="answer-box">
@@ -76,20 +88,45 @@
         }
 
         function filterText() {
-            document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/champions?" + new URLSearchParams({ query: document.getElementById("filter-text-val").value }).toString())
+            document.getElementById("answer-box").innerHTML = "";
+            const loadingContainer = document.getElementById('loading-container');
+            const searchQuery = document.getElementById("filter-text-val").value;
+
+            // Show loading animation
+            loadingContainer.style.display = 'flex';
+
+            fetch("/champions?" + new URLSearchParams({ query: searchQuery }).toString())
                 .then((response) => response.json())
-                .then((data) => data.forEach(row => {
-                    let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.name, row.traits)
-                    document.getElementById("answer-box").appendChild(tempDiv)
-                }));
+                .then((data) => {
+                    data.forEach(row => {
+                        let tempDiv = document.createElement("div");
+                        tempDiv.innerHTML = answerBoxTemplate(row.name, row.traits);
+                        document.getElementById("answer-box").appendChild(tempDiv);
+                    });
+
+                    // Hide loading animation
+                    loadingContainer.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error during search:', error);
+                    // Hide loading animation even on error
+                    loadingContainer.style.display = 'none';
+                });
 
             const input = document.getElementById('filter-text-val');
             const placeholder = document.querySelector('.placeholder-text');
             placeholder.style.display = input.value ? 'none' : 'inline-block';
         }
+
+        // Add event listener for search button
+        document.getElementById('search-button').addEventListener('click', filterText);
+
+        // Add event listener for Enter key press
+        document.getElementById('filter-text-val').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                filterText();
+            }
+        });
 
         const typewriterElement = document.querySelector('.typewriter-text');
         const words = ['champion', 'class', 'playstyle'];
@@ -125,7 +162,20 @@
             placeholder.style.display = this.value ? 'none' : 'inline-block';
         });
 
-        window.addEventListener('load', typeEffect);
+        window.addEventListener('load', function () {
+            // Initialize typewriter effect
+            typeEffect();
+
+            // Hide loading container initially
+            document.getElementById('loading-container').style.display = 'none';
+
+            // Check light mode settings
+            const isLightMode = localStorage.getItem('lightMode') === 'true';
+            if (isLightMode) {
+                document.body.classList.add('light-mode');
+                updateToggleIcon(true);
+            }
+        });
 
         document.getElementById('filter-text-val').addEventListener('focus', function () {
             const placeholder = document.querySelector('.placeholder-text');
@@ -163,14 +213,6 @@
     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
             }
         }
-
-        window.addEventListener('load', function () {
-            const isLightMode = localStorage.getItem('lightMode') === 'true';
-            if (isLightMode) {
-                document.body.classList.add('light-mode');
-                updateToggleIcon(true);
-            }
-        });
     </script>
 
     <div class="theme-toggle" onclick="toggleTheme()">
