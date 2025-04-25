@@ -189,19 +189,6 @@ body {
     border-color: rgba(200, 155, 60, 0.5);
 }
 
-.answer-name {
-    font-family: 'Kanit', sans-serif;
-    font-size: 30px;
-    color: #F0E6D2;
-}
-
-.answer-traits {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 20px;
-    margin-top: 10px;
-    color: #A09B8C;
-}
-
 .trait {
     font-family: Montserrat, sans-serif;
     color: var(--text-color);
@@ -268,12 +255,11 @@ body {
     background-color: var(--background-color);
 }
 
-.answer-name {
-    color: var(--text-color);
-}
-
 .answer-traits {
-    color: var(--secondary-text-color);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    margin-top: 10px;
+    color: #A09B8C;
 }
 
 .input-box {
@@ -393,6 +379,7 @@ body,
     box-shadow: 0 2px 5px rgba(200, 155, 60, 0.4);
 }
 
+/* Loading ring styles */
 .lds-ring,
 .lds-ring div {
     box-sizing: border-box;
@@ -440,6 +427,7 @@ body,
     }
 }
 
+/* Loading container styles */
 .loading-container {
     display: flex;
     justify-content: center;
@@ -448,99 +436,17 @@ body,
     color: #C89B3C;
 }
 
+/* Light mode support for loader */
 .light-mode .lds-ring div {
     border-color: #0A78AA transparent transparent transparent;
-}
-
-.card-container {
-    perspective: 1000px;
-    width: 100%;
-    height: 300px;
-    margin-bottom: 20px;
-}
-
-.card {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-    cursor: pointer;
-}
-
-.card-container:hover .card {
-    transform: rotateY(180deg);
-}
-
-.card-front,
-.card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.card-front {
-    background-color: var(--card-background);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-}
-
-.card-back {
-    background-color: var(--card-background);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    transform: rotateY(180deg);
-    overflow-y: auto;
-}
-
-.champion-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
-    height: 150px;
-}
-
-.champion-image img {
-    max-height: 150px;
-    max-width: 150px;
-    object-fit: contain;
-}
-
-.champion-info {
-    text-align: center;
-}
-
-.star-rating {
-    font-size: 24px;
-    margin-top: 10px;
-    color: var(--secondary-text-color);
-}
-
-.star.filled {
-    color: #C89B3C;
-}
-
-.lore-description {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    color: var(--secondary-text-color);
-    margin: 15px 0;
-    line-height: 1.5;
-    flex-grow: 1;
-    overflow-y: auto;
 }
 
 /* Card Flip Styles */
 .card-container {
     perspective: 1000px;
     width: 100%;
-    height: 300px;
+    height: 350px;
+    /* Reduced from 650px */
     margin-bottom: 20px;
 }
 
@@ -568,47 +474,146 @@ body,
     height: 100%;
     backface-visibility: hidden;
     border-radius: 8px;
-    padding: 20px;
+    padding: 15px;
+    /* Reduced from 25px */
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .card-front {
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     color: var(--text-color);
+    display: flex;
+    flex-direction: column;
 }
 
+/* Card back styling with explicit ordering */
 .card-back {
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     color: var(--text-color);
     transform: rotateY(180deg);
     overflow-y: auto;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure name is at the top of the back */
+.card-back .answer-name {
+    order: 1;
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-size: 36px;
+    color: var(--text-color);
+    font-family: 'Kanit', sans-serif;
+}
+
+/* Lore description comes after the name */
+.card-back .lore-description {
+    order: 2;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: var(--secondary-text-color);
+    margin: 0 0 20px 0;
+    line-height: 1.6;
+}
+
+/* Traits section comes last */
+.card-back .answer-traits {
+    order: 3;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    margin-top: 10px;
+    color: var(--secondary-text-color);
 }
 
 .champion-image {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 15px;
-    height: 150px;
+    margin: 0 0 2px 0;
+    /* Drastically reduced margin */
+    height: auto;
+    /* Maintained height for large image */
+    padding: 0;
+    /* Removed padding around the container */
+    order: 2;
+    /* Place image second */
 }
 
 .champion-image img {
-    max-height: 150px;
-    max-width: 150px;
+    max-height: 500px;
+    /* Same size as before */
+    max-width: 500px;
     object-fit: contain;
+    border-radius: 18px;
+    border: 4px solid #C89B3C;
+    box-shadow: 0 0 20px rgba(200, 155, 60, 0.4);
+    background-color: rgba(10, 20, 40, 0.4);
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.champion-image img:hover {
+    border-color: #F0E6D2;
+    /* Lighter gold on hover */
+    box-shadow: 0 0 25px rgba(200, 155, 60, 0.6);
+    /* Enhanced glow on hover */
+    transform: scale(1.03);
+    /* Slightly enlarge on hover (reduced scale effect for larger images) */
 }
 
 .champion-info {
     text-align: center;
+    width: 100%;
+    order: 3;
+    /* Place info after image */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0;
+    /* Remove top margin */
+}
+
+.answer-name {
+    font-size: 36px;
+    margin: 0 0 2px 0;
+    /* Drastically reduced margin */
+    text-align: center;
+    color: var(--text-color);
+    font-family: 'Kanit', sans-serif;
+    order: 1;
+    /* Place name first */
+}
+
+/* Star rating container - horizontal layout with label */
+.rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 5px 0;
+    /* Minimal margin */
+    width: 100%;
+}
+
+.rating-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-right: 10px;
 }
 
 .star-rating {
-    font-size: 24px;
-    margin-top: 10px;
-    color: var(--secondary-text-color);
+    font-size: 30px;
+    /* Increased from 24px */
+    margin: 0;
+    /* Removed all margins */
+    display: inline-flex;
+    /* Make it an inline flex container */
 }
 
 .star.filled {
@@ -617,10 +622,41 @@ body,
 
 .lore-description {
     font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
+    /* Increased from 14px */
     color: var(--secondary-text-color);
     margin: 15px 0;
-    line-height: 1.5;
+    line-height: 1.6;
     flex-grow: 1;
     overflow-y: auto;
+}
+
+/* Commonly paired champions section */
+.paired-champions {
+    margin-top: 0;
+    /* Removed top margin */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    color: var(--secondary-text-color);
+}
+
+.paired-champions-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.paired-champions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.paired-champion {
+    background-color: rgba(10, 20, 40, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 12px;
 }
