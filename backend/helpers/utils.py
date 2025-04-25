@@ -64,7 +64,7 @@ champions = [
     "Zed",
     "Zeri",
     "Ziggs",
-    "Zyra"
+    "Zyra",
 ]
 
 combined_champions = {
@@ -140,7 +140,7 @@ Separate, but never parted, Kindred represents the twin essences of death. Lamb'
     "Kobuko": """
 A jolly yordle from Bandle City, Kobuko spent years exploring the world and discovered that it is often harsh and unfair. And his search to understand this led him to Ionia, where he fell in love with the culture, the people, the environment, and the philosophies, and then added his own brand of yordle eccentricity to the mix. Now he travels across Runeterra, seeking to help others find joy and value in life, even through adversity, and encouraging those he meets to pursue their dreams, do what they love, and explore new possibilities. (any_items): No review available Highly flexible 5-cost; can use almost any leftover or powerful items effectively. Cyberboss looks like a fun mechanic that gives a pretty significant amount of power. It only takes two to get started, although the options are limited with only four existing Cyberboss units. Assuming you can find what you need and get control over which champ is your “strongest” Cyberboss, it sounds quite effective. Getting all four could actually be feasible, and the reward would be worth the effort. Even if you have to wait a while for the fourth, you won’t be wasting any slots since three pieces still provides a slight stat increase. Bruiser is essentially the Health counterpart to Bastion. Similarly, it also has a wide range of available units and can be acquired easily if desired. Frontline; Kobuko has the potential to really rough up the opponent’s team. His passive Shield/Omnivamp plus active Durability make him incredibly tanky, while also having an AoE Knock Up. Among the Cyberboss units, it’s clear he’s in charge, as the bonus increases the range and durability of the Knock Up.
 """,
-    "Kog'maw": """
+    "KogMaw": """
 Belched forth from a rotting Void incursion deep in the wastelands of Icathia, Kog'Maw is an inquisitive yet putrid creature with a caustic, gaping mouth. This particular Void-spawn needs to gnaw and drool on anything within reach to truly understand it. Though not inherently evil, Kog'Maw's beguiling naiveté is dangerous, as it often precedes a feeding frenzy—not for sustenance, but to satisfy its unending curiosity. guinsoos_rageblade: Crucial for ramp-up auto-attackers (Aphelios, Kog'Maw). Top-tier if fights last long enough. runaans_hurricane: No review available deathblade: Raw AD for your main carry (e.g. Draven, Aphelios). Often overshadowed by Infinity Edge + others. Auto-attack champion that scales well with AS and multi-target hits; Gunblade also viable. BoomBots could be a relatively easy source of extra damage in the early game. Two units is all it takes, making it a low initial investment. However, later on once units get stronger, it may be necessary to invest items into them to improve damage and survivability. I don’t know if getting six pieces would be worth it, unless you can build really strong tanks to withstand enemy attacks while you retaliate with missiles. Rapidfire is great. Unlike Marksman, the Attack Speed applies to the entire team, with Rapidfire units gaining more and more with every attack. Building AD lets your Rapidfire champs take advantage of their accelerated rate of attack. Backline; Kog’Maw is a basic backline AD carry that can regularly increase its Attack Speed. Both its traits work well with this and require little investment to get going. Unlike its past iteration, this Kog’Maw scales with AD.
 """,
     "Leblanc": """
@@ -253,14 +253,17 @@ Born in an ancient, sorcerous catastrophe, Zyra is the wrath of nature given for
 combined_champions = [f"{k} : {v}" for k, v in combined_champions.items()]
 
 # Create a mapping of champion names to their indices for easy access
-champions_lower_dict = {champions[i].lower(): i for i in range(len(combined_champions))}  
+champions_lower_dict = {champions[i].lower(): i for i in range(len(combined_champions))}
 
-comatrix_normalized = np.load(os.path.join(os.environ['ROOT_PATH'], 'data', 'comatrix_normalized.npy'))
-comatrix = np.load(os.path.join(os.environ['ROOT_PATH'], 'data', 'comatrix.npy'))
+comatrix_normalized = np.load(
+    os.path.join(os.environ["ROOT_PATH"], "data", "comatrix_normalized.npy")
+)
+comatrix = np.load(os.path.join(os.environ["ROOT_PATH"], "data", "comatrix.npy"))
+
 
 # Tokenize method which can be passed into various methods.
 def tokenize(text):
-    """Returns a list of words that make up the text.    
+    """Returns a list of words that make up the text.
 
     Parameters
     ----------
@@ -275,7 +278,9 @@ def tokenize(text):
     return [x for x in re.findall(r"[a-z]+", text.lower())]
 
 
-def recommend_next_champion(user_comp_csv, comatrix_normalized, champions, champions_lower_dict):
+def recommend_next_champion(
+    user_comp_csv, comatrix_normalized, champions, champions_lower_dict
+):
     """
     Given a comma-separated list of champion names, returns the champion
     with the highest row-normalized co-occurrence sum that is not already
@@ -290,10 +295,14 @@ def recommend_next_champion(user_comp_csv, comatrix_normalized, champions, champ
     """
 
     # Parse the user's champions into a list of lowercase names
-    user_champ_list = [champ.strip().lower() for champ in user_comp_csv.split(',') if champ.strip()]
+    user_champ_list = [
+        champ.strip().lower() for champ in user_comp_csv.split(",") if champ.strip()
+    ]
 
     # Convert each champion to its index (skip any name not in the dictionary)
-    user_indices = [champions_lower_dict[c] for c in user_champ_list if c in champions_lower_dict]
+    user_indices = [
+        champions_lower_dict[c] for c in user_champ_list if c in champions_lower_dict
+    ]
 
     # Accumulate row-normalized co-occurrence scores across all champions in the comp
     # This gives us a "likelihood" score for every other champion
@@ -303,13 +312,16 @@ def recommend_next_champion(user_comp_csv, comatrix_normalized, champions, champ
 
     # Exclude champions already in the user's comp by setting their scores to a negative number
     for idx in user_indices:
-        accum_scores[idx] = -1_000_000  # any large negative value to ensure they're not chosen
+        accum_scores[idx] = (
+            -1_000_000
+        )  # any large negative value to ensure they're not chosen
 
     # Get the index of the champion with the highest score
     recommended_idx = np.argmax(accum_scores)
 
     # Return the champion name
     return champions[recommended_idx]
+
 
 def recommend_champions(user_comp_csv):
     """
@@ -323,10 +335,14 @@ def recommend_champions(user_comp_csv):
     """
 
     # 1) Parse the user's champions into a list of lowercase names
-    user_champ_list = [champ.strip().lower() for champ in user_comp_csv.split(',') if champ.strip()]
+    user_champ_list = [
+        champ.strip().lower() for champ in user_comp_csv.split(",") if champ.strip()
+    ]
 
     # 2) Convert each champion to its index (skip any name not in the dictionary)
-    user_indices = [champions_lower_dict[c] for c in user_champ_list if c in champions_lower_dict]
+    user_indices = [
+        champions_lower_dict[c] for c in user_champ_list if c in champions_lower_dict
+    ]
 
     # 3) Accumulate row-normalized co-occurrence scores across all champions in the comp
     accum_scores = np.zeros(comatrix_normalized.shape[0])
@@ -339,6 +355,7 @@ def recommend_champions(user_comp_csv):
 
     # 5) Return the accumulated scores for all champions
     return accum_scores
+
 
 # Example usage:
 # recommended = recommend_next_champions("Ahri, Annie, Ashe", comatrix_normalized, champions, champions_lower_dict, k=3)
