@@ -91,13 +91,13 @@ def sql_search_champions(champions, scores):
                 best_5_champions_for_this_champion_info
                 + [dict(zip(keys, row)) for row in other_champion_result]
             )
-
+        print(champion_result.mappings().all())
         to_add = {
             "name": champion,
             "traits": (
-                champion_result.mappings().all()[0]["traits"]
-                if champion_result
-                else "No traits found."
+                "No traits found." 
+                if (not champion_result or len(champion_result.mappings().all()) == 0)
+                else champion_result.mappings().all()[0]["traits"]
             ),
             "tags": svd_searcher.get_tags(champion, top_n=5),
             "best_5_champions": best_5_champions_for_this_champion_info,
