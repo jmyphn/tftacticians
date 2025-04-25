@@ -63,24 +63,53 @@
     </div>
 
     <script>
-        function answerBoxTemplate(name, traits) {
+        function answerBoxTemplate(name, traits, lore = "") {
             // name: name of the champion
             // traits: list of trait name to trait description
-            // e.g. "Sorcerer: +20% spell power"
+            // lore: lore description of the champion
 
             let traitsHTML = ""
             for (let i = 0; i < traits.length; i++) {
                 traitsHTML += `<div class="trait">${traits[i].name}</div>`
                 traitsHTML += `<div class="trait-desc">${traits[i].description}</div>`
             }
+
+            // Create star rating (random 1-5 for now, you can replace with actual data)
+            const starRating = Math.floor(Math.random() * 5) + 1;
+            let starsHTML = "";
+            for (let i = 0; i < 5; i++) {
+                if (i < starRating) {
+                    starsHTML += `<span class="star filled">★</span>`;
+                } else {
+                    starsHTML += `<span class="star">☆</span>`;
+                }
+            }
+
+            // Create image path based on champion name
+            const imagePath = `${name.replace(/[^a-zA-Z0-9]/g, '')}.png`;
+
             return `
-                <h3>
+        <div class="card-container">
+            <div class="card">
+                <div class="card-front">
+                    <div class="champion-image">
+                        <img src="/static/images/tft-champion/${imagePath}" alt="${name}" onerror="this.src='/static/images/pengu.png'">
+                    </div>
+                    <div class="champion-info">
+                        <div class="answer-name">${name}</div>
+                        <div class="star-rating">${starsHTML}</div>
+                    </div>
+                </div>
+                <div class="card-back">
                     <div class="answer-name">${name}</div>
+                    <div class="lore-description">${lore}</div>
                     <div class="answer-traits">
                         ${traitsHTML}
                     </div>
-                </h3>
-            `
+                </div>
+            </div>
+        </div>
+    `;
         }
 
         function sendFocus() {
@@ -95,13 +124,38 @@
             // Show loading animation
             loadingContainer.style.display = 'flex';
 
+            // First fetch champion data
             fetch("/champions?" + new URLSearchParams({ query: searchQuery }).toString())
                 .then((response) => response.json())
                 .then((data) => {
-                    data.forEach(row => {
+                    // For each champion, fetch their lore
+                    const lorePromises = data.map(champion =>
+                        fetch("/champion-lore?" + new URLSearchParams({
+                            name: champion.name
+                        }).toString())
+                            .then(response => response.json())
+                            .then(loreData => {
+                                // Add lore to champion data
+                                champion.lore = loreData.lore || "No lore available.";
+                                return champion;
+                            })
+                    );
+
+                    // After all lore is fetched, render cards
+                    return Promise.all(lorePromises).then(() => data);
+                })
+                .then((championsWithLore) => {
+                    championsWithLore.forEach(champion => {
                         let tempDiv = document.createElement("div");
-                        tempDiv.innerHTML = answerBoxTemplate(row.name, row.traits);
+                        tempDiv.innerHTML = answerBoxTemplate(champion.name, champion.traits, champion.lore);
                         document.getElementById("answer-box").appendChild(tempDiv);
+                    });
+
+                    // Add click event listeners to cards for manual flipping
+                    document.querySelectorAll('.card-container').forEach(card => {
+                        card.addEventListener('click', function () {
+                            this.querySelector('.card').classList.toggle('flipped');
+                        });
                     });
 
                     // Hide loading animation
