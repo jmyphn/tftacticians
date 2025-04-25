@@ -35,7 +35,7 @@ INSERT INTO champ_info (name, traits) VALUES
 ('Jinx', 'Street Demon,Marksman'),
 ('Kindred', 'Nitro,Rapidfire,Marksman'),
 ('Kobuko', 'Cyberboss,Bruiser'),
-("Kog'Maw", 'BoomBots,Rapidfire'),
+("KogMaw", 'BoomBots,Rapidfire'),
 ('LeBlanc', 'Cypher,Strategist'),
 ('Leona', 'Anima Squad,Vanguard'),
 ('Miss Fortune', 'Syndicate,Dynamo'),
