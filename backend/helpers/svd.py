@@ -23,7 +23,7 @@ class SVDSearcher:
         self.champions = champions
 
         self.vectorizer = TfidfVectorizer(
-            tokenizer=tokenize, stop_words="english", min_df=2, max_df=0.8
+            tokenizer=tokenize, stop_words="english", min_df=1, max_df=0.8
         )
 
         self.dt_matrix = self.vectorizer.fit_transform(champion_descriptions)
