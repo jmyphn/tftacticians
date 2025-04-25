@@ -80,6 +80,7 @@ def sql_search_champions(champions, scores):
         best_5_champions_for_this_champion = [
             x.split(":")[0].strip() for x in champion_scores
         ]
+        print("best 5 champions for this champion:")
         print(best_5_champions_for_this_champion)
         best_5_champions_for_this_champion_info = []
 
@@ -91,17 +92,20 @@ def sql_search_champions(champions, scores):
                 best_5_champions_for_this_champion_info
                 + [dict(zip(keys, row)) for row in other_champion_result]
             )
-        print(champion_result.mappings().all())
+        print("-" * 20)
+        print(champion)
+        lst = champion_result.mappings().all()
+        print(lst)
+        print("-" * 20)
         to_add = {
             "name": champion,
             "traits": (
-                "No traits found." 
-                if (not champion_result or len(champion_result.mappings().all()) == 0)
-                else champion_result.mappings().all()[0]["traits"]
+                lst[0]["traits"] if lst else "No traits found."
             ),
             "tags": svd_searcher.get_tags(champion, top_n=5),
             "best_5_champions": best_5_champions_for_this_champion_info,
         }
+        print("here ")
         # print(to_add)
         champion_info.append(to_add)
     # print(champion_info)
@@ -190,7 +194,7 @@ def champion_lore():
     from flask import jsonify
     from static.lore import tft_champions
 
-    champion_name = request.args.get("name", "")
+    champion_name = request.args.get("name", "").replace("-", "").replace("_", "").replace("'", "")
 
     normalized_name = champion_name.strip()
 
