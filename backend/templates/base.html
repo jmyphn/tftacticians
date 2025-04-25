@@ -48,7 +48,6 @@
                     <span>Search</span>
                 </button>
             </div>
-            <!-- Loading ring container positioned below the search bar -->
             <div id="loading-container" class="loading-container">
                 <div class="lds-ring">
                     <div></div>
@@ -64,48 +63,53 @@
 
     <script>
         function answerBoxTemplate(champion) {
-            // Extract data from the champion object
             const name = champion.name;
             const traits = champion.traits;
             const lore = champion.lore || "No lore available.";
             const score = champion.score || 0;
             const best5Champions = champion.best_5_champions || [];
+            const tags = champion.tags || [];
 
-            // Generate traits HTML
+            let tagsHTML = "";
+            if (tags.length) {
+                tagsHTML = `
+        <div class="champion-tags-container">
+          <span class="tags-label">Tags:</span>
+          <div class="champion-tags">
+            ${tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+          </div>
+        </div>`;
+            }
+
             let traitsHTML = "";
             for (let i = 0; i < traits.length; i++) {
                 traitsHTML += `<div class="trait">${traits[i].name}</div>`;
                 traitsHTML += `<div class="trait-desc">${traits[i].description}</div>`;
             }
 
-            // Generate star rating based on score
-            const starRating = (score >= 1 && score <= 5) ? Math.round(score) : Math.min(5, Math.max(1, Math.round(score)));
+            const starRating = (score >= 1 && score <= 5)
+                ? Math.round(score)
+                : Math.min(5, Math.max(1, Math.round(score)));
             let starsHTML = "";
             for (let i = 0; i < 5; i++) {
-                if (i < starRating) {
-                    starsHTML += `<span class="star filled">★</span>`;
-                } else {
-                    starsHTML += `<span class="star">☆</span>`;
-                }
+                starsHTML += (i < starRating)
+                    ? `<span class="star filled">★</span>`
+                    : `<span class="star">☆</span>`;
             }
 
-            // Generate paired champions HTML
             let pairedChampionsHTML = "";
-            if (best5Champions && best5Champions.length > 0) {
+            if (best5Champions.length > 0) {
                 pairedChampionsHTML = `
-            <div class="paired-champions">
-                <div class="paired-champions-title">Players most commonly pair with:</div>
-                <div class="paired-champions-list">
-                    ${best5Champions.slice(0, 3).map(champ =>
-                    `<span class="paired-champion">${champ.name}</span>`
-                ).join('')}
-                </div>
-            </div>
-        `;
+        <div class="paired-champions">
+          <div class="paired-champions-title">Players most commonly pair with:</div>
+          <div class="paired-champions-list">
+            ${best5Champions.slice(0, 3)
+                        .map(champ => `<span class="paired-champion">${champ.name}</span>`)
+                        .join('')}
+          </div>
+        </div>`;
             }
 
-            // Create image path based on champion name
-            let imagePath = "";
             const championNameMapping = {
                 "Aurelion Sol": "AurelionSol",
                 "Cho'Gath": "Chogath",
@@ -125,44 +129,44 @@
                 "Xin Zhao": "XinZhao"
             };
 
-            if (championNameMapping[name]) {
-                imagePath = `${championNameMapping[name]}.png`;
-            } else {
-                // Remove spaces and special characters, keep letters and numbers
-                imagePath = `${name.replace(/[^a-zA-Z0-9]/g, '')}.png`;
-            }
+            let imagePath = championNameMapping[name]
+                ? `${championNameMapping[name]}.png`
+                : `${name.replace(/[^a-zA-Z0-9]/g, '')}.png`;
 
             return `
-        <div class="card-container">
-            <div class="card">
-                <div class="card-front">
-                    <!-- Name appears above the image with minimal spacing -->
-                    <div class="answer-name">${name}</div>
-                    
-                    <div class="champion-image">
-                        <img src="/static/images/tft-champion/${imagePath}" alt="${name}" onerror="this.src='/static/images/pengu.png'">
-                    </div>
-                    
-                    <div class="champion-info">
-                        <!-- Rating container with label -->
-                        <div class="rating-container">
-                            <div class="rating-label">Compatibility rating:</div>
-                            <div class="star-rating">${starsHTML}</div>
-                        </div>
-                        ${pairedChampionsHTML}
-                    </div>
+    <div class="card-container">
+        <div class="card">
+            <div class="card-front">
+                <!-- Name appears above the image with minimal spacing -->
+                <div class="answer-name">${name}</div>
+
+                ${tagsHTML}
+
+                <div class="champion-image">
+                    <img src="/static/images/tft-champion/${imagePath}"
+                         alt="${name}"
+                         onerror="this.src='/static/images/pengu.png'">
                 </div>
-                <div class="card-back">
-                    <!-- Ensure name is at the top of the back -->
-                    <div class="answer-name">${name}</div>
-                    <div class="lore-description">${lore}</div>
-                    <div class="answer-traits">
-                        ${traitsHTML}
+
+                <div class="champion-info">
+                    <!-- Rating container with label -->
+                    <div class="rating-container">
+                        <div class="rating-label">Compatibility rating:</div>
+                        <div class="star-rating">${starsHTML}</div>
                     </div>
+                    ${pairedChampionsHTML}
+                </div>
+            </div>
+            <div class="card-back">
+                <!-- Ensure name is at the top of the back -->
+                <div class="answer-name">${name}</div>
+                <div class="lore-description">${lore}</div>
+                <div class="answer-traits">
+                    ${traitsHTML}
                 </div>
             </div>
         </div>
-    `;
+    </div>`;
         }
 
 
@@ -175,50 +179,41 @@
             const loadingContainer = document.getElementById('loading-container');
             const searchQuery = document.getElementById("filter-text-val").value;
 
-            // Show loading animation
             loadingContainer.style.display = 'flex';
 
-            // Fetch champion data
             fetch("/champions?" + new URLSearchParams({ query: searchQuery }).toString())
                 .then((response) => response.json())
                 .then((data) => {
-                    // For each champion, fetch their lore
                     const lorePromises = data.map(champion =>
                         fetch("/champion-lore?" + new URLSearchParams({
                             name: champion.name
                         }).toString())
                             .then(response => response.json())
                             .then(loreData => {
-                                // Add lore to champion data
                                 champion.lore = loreData.lore || "No lore available.";
                                 return champion;
                             })
                     );
 
-                    // After all lore is fetched, render cards
                     return Promise.all(lorePromises).then(() => data);
                 })
                 .then((championsWithLore) => {
                     championsWithLore.forEach(champion => {
                         let tempDiv = document.createElement("div");
-                        // Pass the entire champion object to the template
                         tempDiv.innerHTML = answerBoxTemplate(champion);
                         document.getElementById("answer-box").appendChild(tempDiv);
                     });
 
-                    // Add click event listeners to cards for manual flipping
                     document.querySelectorAll('.card-container').forEach(card => {
                         card.addEventListener('click', function () {
                             this.querySelector('.card').classList.toggle('flipped');
                         });
                     });
 
-                    // Hide loading animation
                     loadingContainer.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error during search:', error);
-                    // Hide loading animation even on error
                     loadingContainer.style.display = 'none';
                 });
 
@@ -227,10 +222,8 @@
             placeholder.style.display = input.value ? 'none' : 'inline-block';
         }
 
-        // Add event listener for search button
         document.getElementById('search-button').addEventListener('click', filterText);
 
-        // Add event listener for Enter key press
         document.getElementById('filter-text-val').addEventListener('keypress', function (event) {
             if (event.key === 'Enter') {
                 filterText();
@@ -272,13 +265,10 @@
         });
 
         window.addEventListener('load', function () {
-            // Initialize typewriter effect
             typeEffect();
 
-            // Hide loading container initially
             document.getElementById('loading-container').style.display = 'none';
 
-            // Check light mode settings
             const isLightMode = localStorage.getItem('lightMode') === 'true';
             if (isLightMode) {
                 document.body.classList.add('light-mode');

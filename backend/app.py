@@ -99,6 +99,7 @@ def sql_search_champions(champions, scores):
                 if champion_result
                 else "No traits found."
             ),
+            "tags": svd_searcher.get_tags(champion, top_n=5),
             "best_5_champions": best_5_champions_for_this_champion_info,
         }
         # print(to_add)
@@ -187,14 +188,12 @@ def champions_search():
 @app.route("/champion-lore")
 def champion_lore():
     from flask import jsonify
-    from static.lore import tft_champions  # Import the lore dictionary
+    from static.lore import tft_champions
 
     champion_name = request.args.get("name", "")
 
-    # Normalize the champion name to match the format in lore.py
     normalized_name = champion_name.strip()
 
-    # Find the lore in the tft_champions dictionary
     lore = "No lore available."
     for key, value in tft_champions.items():
         if key.lower() == normalized_name.lower():
