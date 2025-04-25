@@ -20,50 +20,50 @@ champions = [
     "Fiddlesticks",
     "Galio",
     "Garen",
-    "Gragas"
-    "Graves"
-    "Illaoi"
-    "Jarvan IV"
-    "Jax"
-    "Jhin"
-    "Jinx"
-    "Kindred"
-    "Kobuko"
-    "Kog'maw"
-    "Leblanc"
-    "Leona"
-    "Miss Fortune"
-    "Mordekaiser"
-    "Morgana"
-    "Naafiri"
-    "Neeko"
-    "Nidalee"
-    "Poppy"
-    "Renekton"
-    "Rengar"
-    "Rhaast"
-    "Samira"
-    "Sejuani"
-    "Senna"
-    "Seraphine"
-    "Shaco"
-    "Shyvana"
-    "Skarner"
-    "Sylas"
-    "Twisted Fate"
-    "Urgot"
-    "Varus"
-    "Vayne"
-    "Veigar"
-    "Vex"
-    "Vi"
-    "Viego"
-    "Xayah"
-    "Yuumi"
-    "Zac"
-    "Zed"
-    "Zeri"
-    "Ziggs"
+    "Gragas",
+    "Graves",
+    "Illaoi",
+    "Jarvan IV",
+    "Jax",
+    "Jhin",
+    "Jinx",
+    "Kindred",
+    "Kobuko",
+    "Kog'maw",
+    "Leblanc",
+    "Leona",
+    "Miss Fortune",
+    "Mordekaiser",
+    "Morgana",
+    "Naafiri",
+    "Neeko",
+    "Nidalee",
+    "Poppy",
+    "Renekton",
+    "Rengar",
+    "Rhaast",
+    "Samira",
+    "Sejuani",
+    "Senna",
+    "Seraphine",
+    "Shaco",
+    "Shyvana",
+    "Skarner",
+    "Sylas",
+    "Twisted Fate",
+    "Urgot",
+    "Varus",
+    "Vayne",
+    "Veigar",
+    "Vex",
+    "Vi",
+    "Viego",
+    "Xayah",
+    "Yuumi",
+    "Zac",
+    "Zed",
+    "Zeri",
+    "Ziggs",
     "Zyra"
 ]
 
@@ -253,7 +253,7 @@ Born in an ancient, sorcerous catastrophe, Zyra is the wrath of nature given for
 combined_champions = [f"{k} : {v}" for k, v in combined_champions.items()]
 
 # Create a mapping of champion names to their indices for easy access
-champions_lower_dict = {champions[i].lower(): i for i in range(len(champions))}  
+champions_lower_dict = {champions[i].lower(): i for i in range(len(combined_champions))}  
 
 comatrix_normalized = np.load(os.path.join(os.environ['ROOT_PATH'], 'data', 'comatrix_normalized.npy'))
 comatrix = np.load(os.path.join(os.environ['ROOT_PATH'], 'data', 'comatrix.npy'))

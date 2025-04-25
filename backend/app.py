@@ -65,14 +65,45 @@ svd_searcher = SVDSearcher(champion_descriptions)
 # Sample search, the LIKE operator in this case is hard-coded,
 # but if you decide to use SQLAlchemy ORM framework,
 # there's a much better and cleaner way to do this
-def sql_search_champions(champions):
+def sql_search_champions(champions, scores):
     champion_info = []
     for champion in champions:
-        query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE '%%{champion.lower()}%%' limit 1"""
-        result = mysql_engine.query_selector(query_sql)
-        keys = ["name", "traits"]
-        champion_info = champion_info + [dict(zip(keys, row)) for row in result]
+        # Get the champion info from the database
+        query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE "%%{champion.lower()}%%" limit 1"""
+        champion_result = mysql_engine.query_selector(query_sql)
 
+        # find 5 other champions that can be paired with this champion based on
+        # co-occurrence matrix
+        champion_scores = recommend_champions(champion)
+        champion_scores = np.argsort(champion_scores)[::-1][:k]
+        champion_scores = [combined_champions[i] for i in champion_scores]
+        best_5_champions_for_this_champion = [
+            x.split(":")[0].strip() for x in champion_scores
+        ]
+        print(best_5_champions_for_this_champion)
+        best_5_champions_for_this_champion_info = []
+
+        for other_champion in best_5_champions_for_this_champion:
+            query_sql = f"""SELECT * FROM champ_info WHERE LOWER( name ) LIKE "%%{other_champion.lower()}%%" limit 1"""
+            other_champion_result = mysql_engine.query_selector(query_sql)
+            keys = ["name", "traits"]
+            best_5_champions_for_this_champion_info = (
+                best_5_champions_for_this_champion_info
+                + [dict(zip(keys, row)) for row in other_champion_result]
+            )
+
+        to_add = {
+            "name": champion,
+            "traits": (
+                champion_result.mappings().all()[0]["traits"]
+                if champion_result
+                else "No traits found."
+            ),
+            "best_5_champions": best_5_champions_for_this_champion_info,
+        }
+        # print(to_add)
+        champion_info.append(to_add)
+    # print(champion_info)
     # trait info
     keys = ["name", "description"]
     for champion in champion_info:
@@ -82,7 +113,6 @@ def sql_search_champions(champions):
         traits = [trait.strip() for trait in traits]
         champion["traits"] = []
         for trait in traits:
-            print(trait)
             query_sql = f"""SELECT * FROM trait_info WHERE LOWER( name ) LIKE '%%{trait.lower()}%%' limit 1"""
             result = mysql_engine.query_selector(query_sql)
 
@@ -93,11 +123,18 @@ def sql_search_champions(champions):
                 champion["traits"].append(
                     {"name": trait, "description": "No description found."}
                 )
+
+    # score computation for star rating for each champion
+    print(scores)
+    top_score = scores[0]
+    for i, score in enumerate(scores):
+        champion_info[i]["score"] = (
+            round(score * 5 / top_score, 3) if top_score > 0 else 0
+        )
+
     print(champion_info)
-    # Convert the champion_info list to JSON
-    # and return it as a response
     res = json.dumps(champion_info)
-    print(res)
+    # print(res)
     return res
 
 
@@ -108,7 +145,9 @@ def home():
 
 @app.route("/champions")
 def champions_search():
+
     query = request.args.get("query", "")
+    # TODO: cho'gath not being tokenized properly, need to fix
     svd_results_all_champions = svd_searcher.search(query)
     svd_results_all_champions = np.array(svd_results_all_champions).flatten()
 
@@ -119,7 +158,9 @@ def champions_search():
     # to the champions in the database (using edit distance metrics)
     champions_to_find = []
     for token in tokenized_text:
-        if token in champions_lower_dict:
+        print(token)
+        if token.lower() in champions_lower_dict:
+            print(f"Found champion: {token.lower()}")
             champions_to_find.append(token.lower())
 
     champions_csv = ",".join(champions_to_find)
@@ -128,15 +169,19 @@ def champions_search():
     recommended_champions = recommend_champions(champions_csv)
 
     # linear combination between the svd results and the recommended champions
+    # print(svd_results_all_champions)
+    # print("-"*20)
+    # print(recommended_champions)
     find_champions = 0.5 * svd_results_all_champions + 0.5 * recommended_champions
+    scores = np.sort(find_champions)[::-1][:k]
     find_champions = np.argsort(find_champions)[::-1][:k]
     find_champions = [combined_champions[i] for i in find_champions]
     find_champions = [x.split(":")[0].strip() for x in find_champions]
-    print(find_champions)
-    # get the champions from the database
+    for champion in find_champions:
+        print(champion)
 
     # return recommended champions
-    return sql_search_champions(find_champions)
+    return sql_search_champions(find_champions, scores)
 
 
 @app.route("/champion-lore")
